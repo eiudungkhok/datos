@@ -316,8 +316,30 @@ export default function DatOS() {
           {activeSection === "terminal" && (
             <div className="section active"><h2 className="section-title glitch-text" data-text="SYSTEM_TERMINAL">SYSTEM_TERMINAL</h2><div className="terminal-container glass-panel mt-2"><div id="terminal-output">{termHistory.map((item, i) => <div key={i}>{item}</div>)}<div ref={endOfTermRef} /></div><div className="terminal-input-line"><span className="prompt">guest@datos:~$ </span><input type="text" id="terminal-input" autoComplete="off" autoFocus value={termInput} onChange={e => setTermInput(e.target.value)} onKeyDown={handleTerminalSubmit} /></div></div></div>
           )}
+          {/* CONTACT SECTION */}
           {activeSection === "contact" && (
-            <div className="section active"><h2 className="section-title glitch-text" data-text="INITIATE_CONTACT">INITIATE_CONTACT</h2><div className="contact-container mt-2"><div className="contact-info glass-panel"><h3 className="neon-text mb-2">Social Network_</h3><ul className="social-list"><li><a href="#" className="cyber-link"><i className="fab fa-facebook"></i> Facebook</a></li><li><a href="#" className="cyber-link"><i className="fab fa-github"></i> GitHub</a></li><li><a href="#" className="cyber-link"><i className="fab fa-linkedin"></i> LinkedIn</a></li></ul></div><form className="contact-form holographic-card" onSubmit={handleSendMessage}><h3 className="neon-text mb-2">Send_Encrypted_Message</h3><input type="text" className="cyber-input mb-2" placeholder="ID / Name" required value={contactForm.name} onChange={e => setContactForm({...contactForm, name: e.target.value})} /><input type="email" className="cyber-input mb-2" placeholder="Email Address" required value={contactForm.email} onChange={e => setContactForm({...contactForm, email: e.target.value})} /><textarea className="cyber-input mb-2" rows={5} placeholder="Payload..." required value={contactForm.message} onChange={e => setContactForm({...contactForm, message: e.target.value})}></textarea><button type="submit" className="cyber-btn" disabled={isSending}><span>{isSending ? "[ TRANSMITTING... ]" : "[ TRANSMIT DATA ]"}</span></button></form></div></div>
+            <div className="section active">
+              <h2 className="section-title glitch-text" data-text="INITIATE_CONTACT">INITIATE_CONTACT</h2>
+              <div className="contact-container mt-2">
+                <div className="contact-info glass-panel">
+                  <h3 className="neon-text mb-2">Social Network_</h3>
+                  <ul className="social-list">
+                    <li><a href="https://www.facebook.com/eiudungkhok" target="_blank" className="cyber-link"><i className="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://github.com/eiudungkhok" target="_blank" className="cyber-link"><i className="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="https://www.instagram.com/eiudungkhok" target="_blank" className="cyber-link"><i className="fab fa-instagram"></i> Instagram</a></li>
+                  </ul>
+                </div>
+                <form className="contact-form holographic-card" onSubmit={handleSendMessage}>
+                  <h3 className="neon-text mb-2">Send_Encrypted_Message</h3>
+                  <input type="text" className="cyber-input mb-2" placeholder="ID / Name" required value={contactForm.name} onChange={e => setContactForm({...contactForm, name: e.target.value})} />
+                  <input type="email" className="cyber-input mb-2" placeholder="Email Address" required value={contactForm.email} onChange={e => setContactForm({...contactForm, email: e.target.value})} />
+                  <textarea className="cyber-input mb-2" rows={5} placeholder="Payload..." required value={contactForm.message} onChange={e => setContactForm({...contactForm, message: e.target.value})}></textarea>
+                  <button type="submit" className="cyber-btn" disabled={isSending}>
+                    <span>{isSending ? "[ TRANSMITTING... ]" : "[ TRANSMIT DATA ]"}</span>
+                  </button>
+                </form>
+              </div>
+            </div>
           )}
         </section>
       </main>
