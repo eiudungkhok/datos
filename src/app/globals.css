@@ -637,35 +637,78 @@ body.light-mode .glitch-text {
 }
 
 /* =========================================
-   FIX LỖI ẢNH GAMING BỊ KHỔNG LỒ
+   NÂNG CẤP GAMING PROFILE: THẺ BÀI TUYỂN THỦ (BANNER)
    ========================================= */
 .gaming-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); /* Nới rộng thẻ ra chút cho ảnh hiển thị đẹp */
+    gap: 30px;
     margin-top: 20px;
+}
+
+.game-card {
+    border-radius: 16px !important;
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    padding: 0 !important; /* Xóa lề để ảnh bung full chiều ngang */
+    overflow: hidden; /* Phép thuật cắt gọn phần ảnh bị tràn khỏi viền bo góc */
+    display: flex;
+    flex-direction: column;
 }
 
 .game-header {
     display: flex;
+    flex-direction: column; /* Đẩy ảnh lên trên, chữ xuống dưới */
     align-items: center;
-    gap: 20px;
-    border-bottom: 1px dashed var(--glass-border);
-    padding-bottom: 15px;
-    margin-bottom: 15px;
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    gap: 0 !important;
 }
 
+/* Biến ảnh thành Banner */
 .game-avatar {
-    width: 90px !important;
-    height: 90px !important;
-    object-fit: cover !important; /* Phép thuật: Ép ảnh thu nhỏ và cắt vào giữa, không bị méo */
-    border-radius: 50% !important; /* Cắt thành hình tròn */
-    border: 2px solid var(--neon-cyan) !important;
-    flex-shrink: 0; /* Tuyệt đối không cho phép khung ảnh bị bóp méo khi màn hình nhỏ */
+    width: 100% !important; /* Bung ảnh rộng hết cỡ bằng thẻ */
+    height: 200px !important; /* Cố định chiều cao, ông có thể tăng giảm tùy ý (ví dụ: 250px) */
+    object-fit: cover !important; /* Giữ tỷ lệ ảnh, tự động cắt phần ở giữa cho khớp khung */
+    border-radius: 0 !important; /* Xóa hình tròn */
+    border: none !important;
+    border-bottom: 2px solid var(--neon-cyan) !important; /* Đường kẻ viền ngăn cách ảnh và chữ */
 }
 
+/* Khung chứa Tên Game & IGN */
+.game-header div {
+    width: 100%;
+    padding: 15px 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.game-header h3 {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+/* Khung chứa các thông số (Rank, Server...) */
+.game-stats {
+    padding: 20px 25px 25px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Dàn đều dòng thông số ra 2 bên cực xịn */
 .game-stats p {
-    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
     font-size: 1.05rem;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
     color: #ccc;
+}
+
+.game-stats p strong {
+    color: var(--neon-cyan);
+    font-weight: bold;
 }
