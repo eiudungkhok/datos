@@ -281,17 +281,17 @@ export default function DatOS() {
 
       <main className="app-container">
         <nav className="sidebar glass-panel">
-          <div className="user-profile">
+<div className="user-profile">
             <div 
               className="avatar-container" 
               onClick={() => {
                 if (isAdmin) {
                   avatarInputRef.current?.click();
-                } else {
-                  alert("ACCESS DENIED: Bạn đang truy cập với quyền Khách. Chỉ SysAdmin mới được thay đổi Avatar!");
                 }
+                // Xóa hẳn phần else chứa alert đi, khách bấm vào sẽ im ru không có hiện tượng gì
               }} 
-              title={isAdmin ? "Thay đổi Avatar" : "Hệ thống đã khóa"}
+              // Đổi luôn chữ "Hệ thống đã khóa" thành rỗng, để khách rê chuột vào cũng không biết gì
+              title={isAdmin ? "Thay đổi Avatar" : ""}
               style={{ cursor: isAdmin ? 'pointer' : 'default' }}
             >
               {isAdmin && (
