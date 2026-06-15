@@ -251,13 +251,40 @@ export default function DatOS() {
           {activeSection === "certificates" && (
             <div className="section active">
                 <h2 className="section-title glitch-text" data-text="VERIFIED_CREDENTIALS">VERIFIED_CREDENTIALS</h2>
-                <div className="cert-grid mt-2">
-                    {certList.map((c) => (
-                      <div key={c.id} className="cert-card glass-panel"><i className={`fas ${c.icon} cert-icon`} style={{color: c.color_theme}}></i><h3>{c.name}</h3><p>{c.issuer}</p></div>
-                    ))}
-                </div>
+                
+                {/* THUẬT TOÁN GOM NHÓM TỰ ĐỘNG BẰNG CỘT 'name' */}
+                {Object.entries(
+                  certList.reduce((acc, curr) => {
+                    if (!acc[curr.name]) acc[curr.name] = [];
+                    acc[curr.name].push(curr);
+                    return acc;
+                  }, {})
+                ).map(([groupName, items]: [string, any]) => (
+                  <div key={groupName} className="cert-category-group" style={{ marginTop: "30px" }}>
+                    
+                    {/* Tên Nhóm (Lấy từ cột 'name') */}
+                    <h3 className="neon-text mb-2" style={{ fontSize: "1.5rem", borderBottom: "1px dashed var(--glass-border)", paddingBottom: "10px", textTransform: "uppercase" }}>
+                      <i className="fas fa-folder-open" style={{ marginRight: "10px" }}></i> {groupName}
+                    </h3>
+                    
+                    {/* Danh sách các thành tích trong nhóm đó */}
+                    <div className="cert-grid mt-2">
+                        {items.map((c: any) => (
+                          <div key={c.id} className="cert-card glass-panel">
+                              <i className={`fas ${c.icon} cert-icon`} style={{color: c.color_theme, fontSize: "2.5rem"}}></i>
+                              <div style={{ marginTop: "15px" }}>
+                                  {/* In nội dung chi tiết từ cột 'issuer' */}
+                                  <p style={{ color: "#fff", fontSize: "1.1rem", lineHeight: "1.6", fontWeight: "bold" }}>
+                                      {c.issuer}
+                                  </p>
+                              </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                ))}
             </div>
-          )}
+          )})}
 
           {/* DONATE SECTION */}
           {activeSection === "donate" && (
