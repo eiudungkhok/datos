@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { supabase } from "../lib/supabase";
 import Cropper from 'react-easy-crop';
+
 // Hàm xử lý ảnh chuyên sâu
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -18,6 +19,7 @@ async function getCroppedImgBase64(imageSrc: string, pixelCrop: any): Promise<st
   ctx.drawImage(image, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
   return canvas.toDataURL('image/jpeg', 0.8); // Cắt xong nén thành chuỗi siêu nhẹ để lưu thẳng vào Database
 }
+
 export default function DatOS() {
   const [activeSection, setActiveSection] = useState("home");
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -50,20 +52,19 @@ export default function DatOS() {
   
   // --- STATE NHẠC NỀN TỰ ĐỘNG ---
   const audioRef = useRef<HTMLAudioElement>(null);
-  // TRỎ THẲNG TÊN FILE NHẠC TRONG THƯ MỤC PUBLIC
   const [audioSrc, setAudioSrc] = useState("/cyberpunk2077 light.mp3"); 
   const [trackName, setTrackName] = useState("Cyberpunk_Theme.mp3");
   const [isPlaying, setIsPlaying] = useState(false);
   
   // --- STATE QUYỀN ADMIN (Giấu kín) ---
   const [isAdmin, setIsAdmin] = useState(false);
-  // State quản lý việc phóng to ảnh
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const dict = {
     EN: { sys: "SYS_ADMIN", home: "Home", skills: "Skills", projects: "Projects", media: "Media Vault", bio: "Biography", gaming: "Gaming Profile", certs: "Certificates", blog: "Blog", term: "Terminal", contact: "Contact", donate: "Donate" },
     VN: { sys: "QUẢN TRỊ VIÊN", home: "Trang Chủ", skills: "Kỹ Năng", projects: "Dự Án", media: "Thư Viện Ảnh", bio: "Tiểu Sử", gaming: "Hồ Sơ Game", certs: "Chứng Chỉ", blog: "Nhật Ký", term: "Dòng Lệnh", contact: "Liên Hệ", donate: "Ủng Hộ" }
   };
+
   // --- STATE CỦA HỆ THỐNG CẮT ẢNH ---
   const [avatarFileUrl, setAvatarFileUrl] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -76,22 +77,33 @@ export default function DatOS() {
 
   const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setAvatarFileUrl(URL.createObjectURL(file)); // Mở Modal Cắt ảnh
+    if (file) setAvatarFileUrl(URL.createObjectURL(file)); 
   };
 
   const handleSaveAvatar = async () => {
+    // Chặn từ cửa logic nếu chưa bật God Mode
+    if (!isAdmin) {
+      alert("[ LỖI BẢO MẬT ] - Trạng thái Khách không có quyền thay đổi dữ liệu gốc!");
+      setAvatarFileUrl(null);
+      return;
+    }
+
     if (!avatarFileUrl || !croppedAreaPixels) return;
     setIsUploadingAvatar(true);
     try {
       const base64Image = await getCroppedImgBase64(avatarFileUrl, croppedAreaPixels);
       
-      // Update thẳng ảnh mới vào Supabase Profile
-      await supabase.from("profile").update({ avatar_url: base64Image }).eq("id", profile.id);
+      const { error } = await supabase.from("profile").update({ avatar_url: base64Image }).eq("id", profile.id);
+      
+      if (error) {
+        throw error;
+      }
 
-      // Cập nhật giao diện lập tức
       setProfile({ ...profile, avatar_url: base64Image });
-      setAvatarFileUrl(null); // Đóng Modal
-    } catch (error: any) { alert("Lỗi cập nhật ảnh: " + error.message); }
+      setAvatarFileUrl(null); 
+    } catch (error: any) { 
+      alert("Truy cập bị từ chối: Khóa bảo mật RLS trên Supabase đã chặn hành động này!"); 
+    }
     setIsUploadingAvatar(false);
   };
   const t = dict[lang];
@@ -130,19 +142,20 @@ export default function DatOS() {
       if (audioRef.current && !isPlaying) {
         audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
       }
-      // Click xong 1 lần là xóa sự kiện đi
       document.removeEventListener("click", startMusic);
     };
     document.addEventListener("click", startMusic);
     return () => document.removeEventListener("click", startMusic);
   }, [isPlaying]);
 
+  // DUY NHẤT 1 HÀM TOGGLE PLAY
   const togglePlay = () => { 
     if (audioRef.current) { 
       if (isPlaying) audioRef.current.pause(); else audioRef.current.play(); 
       setIsPlaying(!isPlaying); 
     } 
   };
+
   useEffect(() => {
     fetch("https://api.open-meteo.com/v1/forecast?latitude=16.0678&longitude=108.2208&current_weather=true")
       .then(res => res.json())
@@ -160,10 +173,9 @@ export default function DatOS() {
   };
 
   const toggleTheme = () => { const newTheme = theme === "dark" ? "light" : "dark"; setTheme(newTheme); document.body.classList.toggle("light-mode", newTheme === "light"); };
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (file) { setAudioSrc(URL.createObjectURL(file)); setTrackName(file.name.substring(0, 15) + "..."); setIsPlaying(true); } };
-  const togglePlay = () => { if (audioRef.current) { if (isPlaying) audioRef.current.pause(); else audioRef.current.play(); setIsPlaying(!isPlaying); } };
 
   useEffect(() => { const timer = setInterval(() => setCurrentTime(new Date().toLocaleTimeString("vi-VN")), 1000); return () => clearInterval(timer); }, []);
+  
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return; const ctx = canvas.getContext("2d"); if (!ctx) return;
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -192,7 +204,7 @@ export default function DatOS() {
     }
   }, [activeSection, profile.full_name]);
 
-const handleTerminalSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleTerminalSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const cmd = termInput.trim();
       const cmdLower = cmd.toLowerCase(); 
@@ -207,7 +219,7 @@ const handleTerminalSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) =>
             setTermInput("");
             
             // Gửi email và pass lên Supabase để check
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const { error } = await supabase.auth.signInWithPassword({
                 email: parts[1],
                 password: parts[2]
             });
@@ -243,6 +255,7 @@ const handleTerminalSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) =>
       setTermInput("");
     }
   };
+
   useEffect(() => { endOfTermRef.current?.scrollIntoView({ behavior: "smooth" }); }, [termHistory]);
   const copySTK = (stk: string) => navigator.clipboard.writeText(stk).then(() => alert("COPIED: " + stk));
 
@@ -255,8 +268,8 @@ const handleTerminalSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) =>
           <span className="os-logo glitch-hover" data-text="[DatOS v1.0]">[DatOS v1.0]</span><span className="breadcrumb">C:\Home\{">"} <span id="current-path">{activeSection.toUpperCase()}</span></span>
         </div>
         <div className="topbar-right">
-          {audioSrc && <audio ref={audioRef} src={audioSrc} onEnded={() => setIsPlaying(false)} autoPlay loop />}
-          <span id="music-player" className="cursor-pointer" onClick={() => audioSrc ? togglePlay() : fileInputRef.current?.click()}>
+          {audioSrc && <audio ref={audioRef} src={audioSrc} onEnded={() => setIsPlaying(false)} loop />}
+          <span id="music-player" className="cursor-pointer" onClick={togglePlay}>
             <i className={`fas ${isPlaying ? 'fa-pause-circle' : 'fa-music'}`}></i> <span className="track-name" style={{marginLeft: "5px"}}>{trackName}</span>
           </span>
           <span id="weather-widget" style={{marginLeft: "15px"}}><i className="fas fa-cloud-sun"></i> {temp}</span>
