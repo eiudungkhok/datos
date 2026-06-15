@@ -47,11 +47,16 @@ export default function DatOS() {
   const [lang, setLang] = useState<"EN" | "VN">("EN");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [temp, setTemp] = useState("Loading...");
+  
+  // --- STATE NHẠC NỀN TỰ ĐỘNG ---
   const audioRef = useRef<HTMLAudioElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [audioSrc, setAudioSrc] = useState("");
-  const [trackName, setTrackName] = useState("No_Track_Selected");
+  // TRỎ THẲNG TÊN FILE NHẠC TRONG THƯ MỤC PUBLIC
+  const [audioSrc, setAudioSrc] = useState("/cyberpunk2077 light.mp3"); 
+  const [trackName, setTrackName] = useState("Cyberpunk_Theme.mp3");
   const [isPlaying, setIsPlaying] = useState(false);
+  
+  // --- STATE QUYỀN ADMIN (Giấu kín) ---
+  const [isAdmin, setIsAdmin] = useState(false);
   // State quản lý việc phóng to ảnh
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -119,6 +124,25 @@ export default function DatOS() {
     fetchAllData();
   }, []);
 
+  // BẮT BUỘC PHÁT NHẠC KHI CLICK LẦN ĐẦU
+  useEffect(() => {
+    const startMusic = () => {
+      if (audioRef.current && !isPlaying) {
+        audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      }
+      // Click xong 1 lần là xóa sự kiện đi
+      document.removeEventListener("click", startMusic);
+    };
+    document.addEventListener("click", startMusic);
+    return () => document.removeEventListener("click", startMusic);
+  }, [isPlaying]);
+
+  const togglePlay = () => { 
+    if (audioRef.current) { 
+      if (isPlaying) audioRef.current.pause(); else audioRef.current.play(); 
+      setIsPlaying(!isPlaying); 
+    } 
+  };
   useEffect(() => {
     fetch("https://api.open-meteo.com/v1/forecast?latitude=16.0678&longitude=108.2208&current_weather=true")
       .then(res => res.json())
@@ -168,14 +192,57 @@ export default function DatOS() {
     }
   }, [activeSection, profile.full_name]);
 
-  const handleTerminalSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+const handleTerminalSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      const cmd = termInput.trim().toLowerCase(); let response: React.ReactNode = "";
-      switch(cmd) { case 'help': response = <div style={{color: '#0ff'}}>Commands: about, projects, clear</div>; break; case 'about': response = <div>User: {profile.full_name}<br/>SysAdmin of DatOS.</div>; break; case 'projects': setActiveSection('projects'); response = <div>[SYSTEM] Navigating...</div>; break; case 'clear': setTermHistory([]); setTermInput(""); return; case '': break; default: response = <div style={{color: 'red'}}>Command not found: {cmd}. Type 'help'.</div>; }
-      setTermHistory(prev => [ ...prev, <div key={prev.length}><span className="prompt">guest@datos:~$</span> {cmd}</div>, <div key={prev.length + "res"}>{response}</div> ]); setTermInput("");
+      const cmd = termInput.trim();
+      const cmdLower = cmd.toLowerCase(); 
+      let response: React.ReactNode = "";
+
+      // HỆ THỐNG ĐĂNG NHẬP BÍ MẬT
+      if (cmdLower.startsWith('login ')) {
+        const parts = cmd.split(' ');
+        if (parts.length === 3) {
+            response = <div style={{color: 'yellow'}}>[SYSTEM] Authenticating...</div>;
+            setTermHistory(prev => [...prev, <div key={prev.length}><span className="prompt">guest@datos:~$</span> {cmd}</div>, <div key={prev.length + "res"}>{response}</div>]);
+            setTermInput("");
+            
+            // Gửi email và pass lên Supabase để check
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: parts[1],
+                password: parts[2]
+            });
+            
+            if (error) {
+                setTermHistory(prev => [...prev, <div key={Date.now()} style={{color: 'red'}}>Access Denied: Sai tài khoản hoặc mật khẩu!</div>]);
+            } else {
+                setIsAdmin(true); // BẬT GOD MODE
+                setTermHistory(prev => [...prev, <div key={Date.now()} style={{color: '#0f0'}}>[SUCCESS] ADMIN PRIVILEGES GRANTED. Đã mở khóa quyền thay đổi Avatar!</div>]);
+            }
+            return;
+        } else {
+            response = <div style={{color: 'red'}}>Sai cú pháp. Dùng lệnh: login &lt;email&gt; &lt;mật_khẩu&gt;</div>;
+        }
+      } 
+      else if (cmdLower === 'logout') {
+        await supabase.auth.signOut();
+        setIsAdmin(false);
+        response = <div style={{color: '#0ff'}}>[SYSTEM] Admin logged out. Trở về trạng thái khách.</div>;
+      }
+      else {
+        // CÁC LỆNH BÌNH THƯỜNG
+        switch(cmdLower) { 
+          case 'help': response = <div style={{color: '#0ff'}}>Commands: about, projects, clear, login, logout</div>; break; 
+          case 'about': response = <div>User: {profile.full_name}<br/>SysAdmin of DatOS.</div>; break; 
+          case 'projects': setActiveSection('projects'); response = <div>[SYSTEM] Navigating...</div>; break; 
+          case 'clear': setTermHistory([]); setTermInput(""); return; 
+          case '': break; 
+          default: response = <div style={{color: 'red'}}>Command not found: {cmd}. Type 'help'.</div>; 
+        }
+      }
+      setTermHistory(prev => [ ...prev, <div key={prev.length}><span className="prompt">{isAdmin ? "root" : "guest"}@datos:~$</span> {cmd}</div>, <div key={prev.length + "res"}>{response}</div> ]); 
+      setTermInput("");
     }
   };
-
   useEffect(() => { endOfTermRef.current?.scrollIntoView({ behavior: "smooth" }); }, [termHistory]);
   const copySTK = (stk: string) => navigator.clipboard.writeText(stk).then(() => alert("COPIED: " + stk));
 
@@ -188,7 +255,6 @@ export default function DatOS() {
           <span className="os-logo glitch-hover" data-text="[DatOS v1.0]">[DatOS v1.0]</span><span className="breadcrumb">C:\Home\{">"} <span id="current-path">{activeSection.toUpperCase()}</span></span>
         </div>
         <div className="topbar-right">
-          <input type="file" accept="audio/*" ref={fileInputRef} onChange={handleFileUpload} style={{display: 'none'}} />
           {audioSrc && <audio ref={audioRef} src={audioSrc} onEnded={() => setIsPlaying(false)} autoPlay loop />}
           <span id="music-player" className="cursor-pointer" onClick={() => audioSrc ? togglePlay() : fileInputRef.current?.click()}>
             <i className={`fas ${isPlaying ? 'fa-pause-circle' : 'fa-music'}`}></i> <span className="track-name" style={{marginLeft: "5px"}}>{trackName}</span>
@@ -203,8 +269,17 @@ export default function DatOS() {
       <main className="app-container">
         <nav className="sidebar glass-panel">
           <div className="user-profile">
-<div className="avatar-container" onClick={() => avatarInputRef.current?.click()} title="Thay đổi Avatar">
-              <input type="file" accept="image/*" ref={avatarInputRef} onChange={handleAvatarSelect} style={{display: 'none'}} />
+<div className="user-profile">
+            {/* THÊM ĐIỀU KIỆN TỪ CHỐI CLICK NẾU KHÔNG PHẢI ADMIN */}
+            <div className="avatar-container" onClick={() => isAdmin ? avatarInputRef.current?.click() : null} title={isAdmin ? "Thay đổi Avatar" : "Chỉ Admin mới được thay đổi"}>
+              {isAdmin && <input type="file" accept="image/*" ref={avatarInputRef} onChange={handleAvatarSelect} style={{display: 'none'}} />}
+              <img src={profile.avatar_url} alt="Avatar" className="avatar-img" />
+              <div className="status-dot"></div>
+              {/* CHỈ HIỆN ICON CAMERA KHI ĐÃ LOGIN */}
+              {isAdmin && <div className="avatar-hover-overlay"><i className="fas fa-camera"></i></div>}
+            </div>            
+            <h3 className="user-name glow-text">{profile.full_name}</h3><p className="user-role">{t.sys}</p>
+          </div>              <input type="file" accept="image/*" ref={avatarInputRef} onChange={handleAvatarSelect} style={{display: 'none'}} />
               <img src={profile.avatar_url} alt="Avatar" className="avatar-img" />
               <div className="status-dot"></div>
               <div className="avatar-hover-overlay"><i className="fas fa-camera"></i></div>
