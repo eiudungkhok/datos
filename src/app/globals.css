@@ -635,3 +635,37 @@ body.light-mode .glitch-text {
     text-shadow: 0 0 10px var(--neon-cyan);
     transform: translateY(-3px); /* Nảy nhẹ lên */
 }
+
+/* =========================================
+   FIX LỖI ẢNH GAMING BỊ KHỔNG LỒ
+   ========================================= */
+.gaming-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.game-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px dashed var(--glass-border);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.game-avatar {
+    width: 90px !important;
+    height: 90px !important;
+    object-fit: cover !important; /* Phép thuật: Ép ảnh thu nhỏ và cắt vào giữa, không bị méo */
+    border-radius: 50% !important; /* Cắt thành hình tròn */
+    border: 2px solid var(--neon-cyan) !important;
+    flex-shrink: 0; /* Tuyệt đối không cho phép khung ảnh bị bóp méo khi màn hình nhỏ */
+}
+
+.game-stats p {
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+    color: #ccc;
+}
