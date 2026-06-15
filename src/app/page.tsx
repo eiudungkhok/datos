@@ -284,7 +284,7 @@ export default function DatOS() {
                   </div>
                 ))}
             </div>
-          )})}
+          )}
 
           {/* DONATE SECTION */}
           {activeSection === "donate" && (
