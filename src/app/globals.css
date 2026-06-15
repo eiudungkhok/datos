@@ -792,11 +792,6 @@ body.light-mode .glitch-text {
     height: 100% !important;
     border-radius: 50% !important;
     object-fit: cover !important;
-    
-    /* --- BỘ CÔNG CỤ CHỈNH AVATAR --- */
-    transform: scale(1.1) !important;      /* Chỉnh độ TO/NHỎ: 1.0 là mặc định, 1.2 là phóng to 20%, 1.5 là 50%... */
-    object-position: center 15% !important; /* Chỉnh DỊCH CHUYỂN: 0% là kịch trần trên, 50% là chính giữa, 100% là kịch trần dưới */
-    
     border: 3px solid var(--neon-cyan) !important;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
     filter: none !important;
@@ -838,4 +833,32 @@ body.light-mode .glitch-text {
     letter-spacing: 2px !important;
     margin-top: 4px;
     text-transform: uppercase;
+}
+/* =========================================
+   GIAO DIỆN CẮT ẢNH AVATAR (MINI PHOTOSHOP)
+   ========================================= */
+.avatar-container { cursor: pointer; }
+
+/* Hiệu ứng rê chuột hiện icon Camera */
+.avatar-hover-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    color: white; font-size: 2rem;
+    opacity: 0; transition: opacity 0.3s ease;
+}
+.avatar-container:hover .avatar-hover-overlay { opacity: 1; }
+
+/* Modal Khung Cắt Ảnh */
+.cropper-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+    z-index: 100000; display: flex; justify-content: center; align-items: center; padding: 20px;
+}
+.cropper-modal-content {
+    background: var(--bg-dark); border: 1px solid var(--neon-cyan); border-radius: 16px;
+    width: 400px; max-width: 100%; padding: 25px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+}
+.crop-container {
+    position: relative; width: 100%; height: 300px; background: #000; border-radius: 8px; overflow: hidden; margin: 20px 0;
 }

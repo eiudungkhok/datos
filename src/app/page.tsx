@@ -2,7 +2,22 @@
 import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { supabase } from "../lib/supabase";
+import Cropper from 'react-easy-crop';
+// Hàm xử lý ảnh chuyên sâu
+const createImage = (url: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const image = new Image(); image.addEventListener('load', () => resolve(image));
+    image.addEventListener('error', (error) => reject(error)); image.setAttribute('crossOrigin', 'anonymous'); image.src = url;
+  });
 
+async function getCroppedImgBase64(imageSrc: string, pixelCrop: any): Promise<string> {
+  const image = await createImage(imageSrc);
+  const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+  if (!ctx) return '';
+  canvas.width = pixelCrop.width; canvas.height = pixelCrop.height;
+  ctx.drawImage(image, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
+  return canvas.toDataURL('image/jpeg', 0.8); // Cắt xong nén thành chuỗi siêu nhẹ để lưu thẳng vào Database
+}
 export default function DatOS() {
   const [activeSection, setActiveSection] = useState("home");
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -43,6 +58,36 @@ export default function DatOS() {
   const dict = {
     EN: { sys: "SYS_ADMIN", home: "Home", skills: "Skills", projects: "Projects", media: "Media Vault", bio: "Biography", gaming: "Gaming Profile", certs: "Certificates", blog: "Blog", term: "Terminal", contact: "Contact", donate: "Donate" },
     VN: { sys: "QUẢN TRỊ VIÊN", home: "Trang Chủ", skills: "Kỹ Năng", projects: "Dự Án", media: "Thư Viện Ảnh", bio: "Tiểu Sử", gaming: "Hồ Sơ Game", certs: "Chứng Chỉ", blog: "Nhật Ký", term: "Dòng Lệnh", contact: "Liên Hệ", donate: "Ủng Hộ" }
+  };
+  // --- STATE CỦA HỆ THỐNG CẮT ẢNH ---
+  const [avatarFileUrl, setAvatarFileUrl] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => setCroppedAreaPixels(croppedAreaPixels);
+
+  const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setAvatarFileUrl(URL.createObjectURL(file)); // Mở Modal Cắt ảnh
+  };
+
+  const handleSaveAvatar = async () => {
+    if (!avatarFileUrl || !croppedAreaPixels) return;
+    setIsUploadingAvatar(true);
+    try {
+      const base64Image = await getCroppedImgBase64(avatarFileUrl, croppedAreaPixels);
+      
+      // Update thẳng ảnh mới vào Supabase Profile
+      await supabase.from("profile").update({ avatar_url: base64Image }).eq("id", profile.id);
+
+      // Cập nhật giao diện lập tức
+      setProfile({ ...profile, avatar_url: base64Image });
+      setAvatarFileUrl(null); // Đóng Modal
+    } catch (error: any) { alert("Lỗi cập nhật ảnh: " + error.message); }
+    setIsUploadingAvatar(false);
   };
   const t = dict[lang];
 
@@ -158,8 +203,12 @@ export default function DatOS() {
       <main className="app-container">
         <nav className="sidebar glass-panel">
           <div className="user-profile">
-            <div className="avatar-container"><img src={profile.avatar_url} alt="Avatar" className="avatar-img" /><div className="status-dot"></div></div>
-            <h3 className="user-name glow-text">{profile.full_name}</h3><p className="user-role">{t.sys}</p>
+<div className="avatar-container" onClick={() => avatarInputRef.current?.click()} title="Thay đổi Avatar">
+              <input type="file" accept="image/*" ref={avatarInputRef} onChange={handleAvatarSelect} style={{display: 'none'}} />
+              <img src={profile.avatar_url} alt="Avatar" className="avatar-img" />
+              <div className="status-dot"></div>
+              <div className="avatar-hover-overlay"><i className="fas fa-camera"></i></div>
+            </div>            <h3 className="user-name glow-text">{profile.full_name}</h3><p className="user-role">{t.sys}</p>
           </div>
           <ul className="nav-links">
             <li><a className={activeSection === "home" ? "active" : ""} onClick={() => setActiveSection("home")}><i className="fas fa-home"></i> {t.home}</a></li>
@@ -357,6 +406,37 @@ export default function DatOS() {
                 <i className="fas fa-times"></i>
               </span>
               <img src={selectedImage} alt="Full screen" />
+            </div>
+          </div>
+        )}
+        {/* --- MODAL CẮT ẢNH AVATAR --- */}
+        {avatarFileUrl && (
+          <div className="cropper-modal-overlay">
+            <div className="cropper-modal-content" onClick={e => e.stopPropagation()}>
+              <h3 className="neon-text text-center">ĐIỀU CHỈNH AVATAR</h3>
+              <div className="crop-container">
+                <Cropper
+                  image={avatarFileUrl}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1}          // Ép cắt theo tỉ lệ hình vuông 1:1
+                  cropShape="round"   // Hiển thị khung cắt hình tròn bo viền
+                  showGrid={false}
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                />
+              </div>
+              <div style={{display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px'}}>
+                <label style={{color: '#ccc', fontSize: '0.9rem'}}>Thu phóng (Zoom):</label>
+                <input type="range" value={zoom} min={1} max={3} step={0.1} onChange={(e) => setZoom(Number(e.target.value))} style={{width: '100%'}} />
+              </div>
+              <div style={{display: 'flex', gap: '10px'}}>
+                <button className="cyber-btn secondary" style={{flex: 1}} onClick={() => setAvatarFileUrl(null)} disabled={isUploadingAvatar}>[ HỦY ]</button>
+                <button className="cyber-btn" style={{flex: 1}} onClick={handleSaveAvatar} disabled={isUploadingAvatar}>
+                  {isUploadingAvatar ? "[ ĐANG XỬ LÝ... ]" : "[ XÁC NHẬN ]"}
+                </button>
+              </div>
             </div>
           </div>
         )}
