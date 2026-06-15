@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from '@vercel/analytics/react'; /* 1. IMPORT RADAR VÀO ĐÂY */
+import { Analytics } from '@vercel/analytics/react'; 
+import { SpeedInsights } from "@vercel/speed-insights/next"; /* 1. IMPORT ĐỒNG HỒ TỐC ĐỘ */
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DatOS | Trần Công Đạt",
+  title: "Eiudungkhok_CV",
   description: "Professional Portfolio",
 };
 
@@ -33,7 +34,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         {children}
-        <Analytics /> {/* 2. ĐẶT RADAR Ở ĐÂY ĐỂ NÓ THEO DÕI TOÀN BỘ TRANG */}
+        <Analytics /> 
+        <SpeedInsights /> {/* 2. GẮN ĐỒNG HỒ VÀO GIAO DIỆN */}
       </body>
     </html>
   );
