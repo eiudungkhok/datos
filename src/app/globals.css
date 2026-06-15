@@ -790,12 +790,16 @@ body.light-mode .glitch-text {
 .avatar-img {
     width: 100% !important;
     height: 100% !important;
-    border-radius: 50% !important; /* Bo tròn tuyệt đối */
-    object-fit: cover !important;  /* Phép thuật: Giữ nguyên tỷ lệ ảnh, tự động căn giữa và cắt gọn */
-    object-position: center top;   /* Ưu tiên lấy từ phần ngực và đầu ông trở lên */
-    border: 3px solid var(--neon-cyan) !important; /* Đường viền Cyan sắc mảnh */
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);   /* Đổ bóng phát sáng nhẹ nhàng */
-    filter: none !important;       /* Xóa bỏ các bộ lọc tương phản lỗi thời */
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    
+    /* --- BỘ CÔNG CỤ CHỈNH AVATAR --- */
+    transform: scale(1.1) !important;      /* Chỉnh độ TO/NHỎ: 1.0 là mặc định, 1.2 là phóng to 20%, 1.5 là 50%... */
+    object-position: center 15% !important; /* Chỉnh DỊCH CHUYỂN: 0% là kịch trần trên, 50% là chính giữa, 100% là kịch trần dưới */
+    
+    border: 3px solid var(--neon-cyan) !important;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    filter: none !important;
 }
 
 /* Định vị lại cái chấm xanh trạng thái cho gọn gàng */
