@@ -712,3 +712,62 @@ body.light-mode .glitch-text {
     color: var(--neon-cyan);
     font-weight: bold;
 }
+/* =========================================
+   IMAGE MODAL (PHÓNG TO ẢNH FULL MÀN HÌNH)
+   ========================================= */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Phủ đen mờ toàn bộ màn hình */
+.image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 100000; /* Nổi lên trên tất cả mọi thứ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+}
+
+/* Khung chứa ảnh */
+.image-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Tấm ảnh phóng to */
+.image-modal-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain; /* Ép ảnh hiển thị trọn vẹn, không bị cắt xén */
+    border-radius: 12px;
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+/* Nút X để tắt */
+.close-modal {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-modal:hover {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px var(--neon-pink);
+}

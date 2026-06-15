@@ -37,6 +37,8 @@ export default function DatOS() {
   const [audioSrc, setAudioSrc] = useState("");
   const [trackName, setTrackName] = useState("No_Track_Selected");
   const [isPlaying, setIsPlaying] = useState(false);
+  // State quản lý việc phóng to ảnh
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const dict = {
     EN: { sys: "SYS_ADMIN", home: "Home", skills: "Skills", projects: "Projects", media: "Media Vault", bio: "Biography", gaming: "Gaming Profile", certs: "Certificates", blog: "Blog", term: "Terminal", contact: "Contact", donate: "Donate" },
@@ -237,7 +239,12 @@ export default function DatOS() {
                     {gamingList.map((g) => (
                       <div key={g.id} className="game-card holographic-card">
                           <div className="game-header">
-                              <img src={g.avatar_url} alt={g.game_name} className="game-avatar" />
+                              <img 
+                                src={g.avatar_url} 
+                                alt={g.game_name} 
+                                className="game-avatar cursor-pointer" 
+                                onClick={() => setSelectedImage(g.avatar_url)} 
+                              />
                               <div><h3 className="neon-text" style={{color: g.color_theme}}>{g.game_name}</h3><p>IGN: {g.ign}</p></div>
                           </div>
                           <div className="game-stats"><p><strong>Rank:</strong> {g.rank}</p><p><strong>Server:</strong> {g.server}</p><p><strong>Role:</strong> {g.role_main}</p></div>
@@ -342,6 +349,17 @@ export default function DatOS() {
             </div>
           )}
         </section>
+        {/* --- MODAL PHÓNG TO ẢNH --- */}
+        {selectedImage && (
+          <div className="image-modal-overlay" onClick={() => setSelectedImage(null)}>
+            <div className="image-modal-content" onClick={e => e.stopPropagation()}>
+              <span className="close-modal" onClick={() => setSelectedImage(null)}>
+                <i className="fas fa-times"></i>
+              </span>
+              <img src={selectedImage} alt="Full screen" />
+            </div>
+          </div>
+        )}
       </main>
     </>
   );
