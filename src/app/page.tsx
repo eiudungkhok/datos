@@ -269,21 +269,29 @@ const handleTerminalSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) =>
       <main className="app-container">
         <nav className="sidebar glass-panel">
           <div className="user-profile">
-<div className="user-profile">
-            {/* THÊM ĐIỀU KIỆN TỪ CHỐI CLICK NẾU KHÔNG PHẢI ADMIN */}
-            <div className="avatar-container" onClick={() => isAdmin ? avatarInputRef.current?.click() : null} title={isAdmin ? "Thay đổi Avatar" : "Chỉ Admin mới được thay đổi"}>
-              {isAdmin && <input type="file" accept="image/*" ref={avatarInputRef} onChange={handleAvatarSelect} style={{display: 'none'}} />}
+            <div 
+              className="avatar-container" 
+              onClick={() => {
+                if (isAdmin) {
+                  avatarInputRef.current?.click();
+                } else {
+                  alert("ACCESS DENIED: Bạn đang truy cập với quyền Khách. Chỉ SysAdmin mới được thay đổi Avatar!");
+                }
+              }} 
+              title={isAdmin ? "Thay đổi Avatar" : "Hệ thống đã khóa"}
+              style={{ cursor: isAdmin ? 'pointer' : 'default' }}
+            >
+              {isAdmin && (
+                <input type="file" accept="image/*" ref={avatarInputRef} onChange={handleAvatarSelect} style={{display: 'none'}} />
+              )}
               <img src={profile.avatar_url} alt="Avatar" className="avatar-img" />
               <div className="status-dot"></div>
-              {/* CHỈ HIỆN ICON CAMERA KHI ĐÃ LOGIN */}
-              {isAdmin && <div className="avatar-hover-overlay"><i className="fas fa-camera"></i></div>}
+              {isAdmin && (
+                <div className="avatar-hover-overlay"><i className="fas fa-camera"></i></div>
+              )}
             </div>            
-            <h3 className="user-name glow-text">{profile.full_name}</h3><p className="user-role">{t.sys}</p>
-          </div>              <input type="file" accept="image/*" ref={avatarInputRef} onChange={handleAvatarSelect} style={{display: 'none'}} />
-              <img src={profile.avatar_url} alt="Avatar" className="avatar-img" />
-              <div className="status-dot"></div>
-              <div className="avatar-hover-overlay"><i className="fas fa-camera"></i></div>
-            </div>            <h3 className="user-name glow-text">{profile.full_name}</h3><p className="user-role">{t.sys}</p>
+            <h3 className="user-name glow-text">{profile.full_name}</h3>
+            <p className="user-role">{t.sys}</p>
           </div>
           <ul className="nav-links">
             <li><a className={activeSection === "home" ? "active" : ""} onClick={() => setActiveSection("home")}><i className="fas fa-home"></i> {t.home}</a></li>
