@@ -506,3 +506,49 @@ body.light-mode .glitch-text {
     transform: translateY(-8px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
+
+/* =========================================
+   FIX GIAO DIỆN CERTIFICATES (CHỨNG CHỈ)
+   ========================================= */
+.cert-grid { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; /* Dãn cách giữa các thẻ chứng chỉ */
+    align-items: flex-start; /* Ép khung ôm sát theo chiều dài của chữ, không kéo dài full màn hình */
+}
+
+.cert-card { 
+    text-align: left; /* Căn chữ sang trái cho dễ đọc các mô tả dài */
+    padding: 20px 25px; 
+    border-radius: 12px !important; /* Bo viền góc cho mềm mại */
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid var(--glass-border);
+    width: fit-content; /* Phép thuật: Khung tự động co lại vừa khít với dòng chữ dài nhất */
+    max-width: 100%; /* Tránh bị tràn màn hình trên mobile */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hiệu ứng nhấc thẻ khi di chuột vào */
+.cert-card:hover {
+    transform: translateX(10px); 
+    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.15);
+}
+
+.cert-icon { 
+    font-size: 2rem !important; 
+    margin-bottom: 12px !important; 
+    display: inline-block;
+}
+
+.cert-card h3 { 
+    color: #fff; 
+    margin-bottom: 8px !important; /* Dãn cách giữa tiêu đề và mô tả */
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+}
+
+.cert-card p { 
+    color: #ccc !important; 
+    font-size: 1rem !important; 
+    line-height: 1.6; /* Dãn cách các dòng chữ cho thoáng mắt */
+}
