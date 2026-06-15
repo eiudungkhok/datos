@@ -136,18 +136,19 @@ export default function DatOS() {
     fetchAllData();
   }, []);
 
-  // BẮT BUỘC PHÁT NHẠC KHI CLICK LẦN ĐẦU
+// BẮT BUỘC PHÁT NHẠC KHI CLICK LẦN ĐẦU
   useEffect(() => {
     const startMusic = () => {
-      if (audioRef.current && !isPlaying) {
+      if (audioRef.current) {
         audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
       }
+      // Click xong 1 lần là tự sát (hủy sự kiện) vĩnh viễn luôn
       document.removeEventListener("click", startMusic);
     };
     document.addEventListener("click", startMusic);
     return () => document.removeEventListener("click", startMusic);
-  }, [isPlaying]);
-
+  }, []); // <-- Điểm mấu chốt: Để ngoặc vuông rỗng, không cho rình rập nữa!
+  
   // DUY NHẤT 1 HÀM TOGGLE PLAY
   const togglePlay = () => { 
     if (audioRef.current) { 
