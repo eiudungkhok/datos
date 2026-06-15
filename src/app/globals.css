@@ -380,3 +380,32 @@ body.light-mode .glitch-text {
     object-fit: contain !important; /* Phép thuật ở đây: Ép ảnh vừa khít khung, giữ nguyên tỷ lệ không bị méo */
     border-radius: 8px;
 }
+/* =========================================
+   DONATE CENTER (CHUYỂN THÀNH THẺ BÀI)
+   ========================================= */
+.donate-grid { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 35px; 
+    margin-top: 20px;
+}
+
+.donate-card { 
+    width: 320px; 
+    max-width: 100%;
+    padding: 30px 20px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    border-radius: 16px; 
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid var(--glass-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hiệu ứng nhấc thẻ lên khi di chuột vào */
+.donate-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
