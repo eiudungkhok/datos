@@ -771,3 +771,67 @@ body.light-mode .glitch-text {
     color: var(--neon-pink);
     text-shadow: 0 0 10px var(--neon-pink);
 }
+
+/* =========================================
+   TÚT LẠI AVATAR & PHÔNG CHỮ SIDEBAR SẮC NÉT
+   ========================================= */
+
+/* 1. Ép Avatar thành hình tròn hoàn hảo, không lo ảnh gốc bị dọc hay ngang */
+.avatar-container {
+    position: relative;
+    width: 110px !important;  /* Ép cứng chiều rộng */
+    height: 110px !important; /* Ép cứng chiều cao bằng chiều rộng */
+    margin: 0 auto 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar-img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important; /* Bo tròn tuyệt đối */
+    object-fit: cover !important;  /* Phép thuật: Giữ nguyên tỷ lệ ảnh, tự động căn giữa và cắt gọn */
+    object-position: center top;   /* Ưu tiên lấy từ phần ngực và đầu ông trở lên */
+    border: 3px solid var(--neon-cyan) !important; /* Đường viền Cyan sắc mảnh */
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);   /* Đổ bóng phát sáng nhẹ nhàng */
+    filter: none !important;       /* Xóa bỏ các bộ lọc tương phản lỗi thời */
+}
+
+/* Định vị lại cái chấm xanh trạng thái cho gọn gàng */
+.status-dot {
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 14px;
+    height: 14px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    border: 2px solid #0a141e; /* Tạo một vòng đen mỏng cách ly với ảnh cho chuyên nghiệp */
+    box-shadow: 0 0 10px var(--neon-green);
+    z-index: 5;
+}
+
+/* 2. Thay font chữ tên thành kiểu Sans-Serif hiện đại, đậm nét và sang trọng */
+.user-name {
+    text-align: center;
+    color: #ffffff !important;
+    font-family: var(--font-geist-sans), 'Segoe UI', Roboto, sans-serif !important; /* Dùng font phẳng, sạch sẽ */
+    font-size: 1.35rem !important; 
+    font-weight: 700 !important; /* Chữ đậm, dày dặn */
+    letter-spacing: 1px !important; /* Dãn chữ một chút nhìn cực sang */
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.5) !important; /* Hiệu ứng LED mờ tinh tế, không bị nhòe */
+    margin-top: 12px;
+}
+
+/* Sửa lại chữ SYS_ADMIN ở dưới */
+.user-role {
+    text-align: center;
+    font-size: 0.8rem !important;
+    color: rgba(255, 255, 255, 0.4) !important; /* Làm mờ vừa phải */
+    font-family: var(--font-main) !important;
+    letter-spacing: 2px !important;
+    margin-top: 4px;
+    text-transform: uppercase;
+}
