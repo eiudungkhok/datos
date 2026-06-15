@@ -552,3 +552,57 @@ body.light-mode .glitch-text {
     font-size: 1rem !important; 
     line-height: 1.6; /* Dãn cách các dòng chữ cho thoáng mắt */
 }
+/* =========================================
+   ĐỒNG BỘ GIAO DIỆN "THẺ BÀI XỊN" CHO TOÀN HỆ THỐNG
+   ========================================= */
+
+/* 1. Đồng bộ Gaming Profile */
+.game-card {
+    border-radius: 12px !important;
+    background: var(--glass-bg) !important; /* Dùng nền kính thay vì nền chớp holographic */
+    border: 1px solid var(--glass-border) !important;
+    padding: 20px 25px !important;
+}
+.game-card::before { display: none !important; /* Tắt hiệu ứng nhiễu sóng cũ */ }
+.game-header { border-bottom: 1px dashed var(--glass-border); padding-bottom: 15px; }
+.game-avatar { border-radius: 50% !important; border: 2px solid var(--neon-cyan); } /* Đổi avatar game thành hình tròn */
+
+/* 2. Đồng bộ Blog (Nhật ký) */
+.blog-post { 
+    border-radius: 12px !important; 
+    padding: 20px 25px !important;
+    border-left: 4px solid var(--neon-cyan) !important; /* Giữ điểm nhấn viền trái */
+}
+.blog-post img { border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); } /* Bo góc ảnh cover blog */
+
+/* 3. Đồng bộ Biography (Tiểu sử Timeline) */
+.timeline-item {
+    border-radius: 12px !important;
+    padding: 20px 25px !important;
+}
+
+/* 4. Đồng bộ Media Vault (Thư viện ảnh) */
+.media-item {
+    border-radius: 12px !important;
+    border: 1px solid var(--glass-border) !important;
+}
+
+/* 5. Đồng bộ Projects (Dự án) */
+.project-card {
+    border-radius: 12px !important;
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+}
+.project-card::before { display: none !important; }
+.project-img-wrapper img { border-radius: 12px 12px 0 0 !important; } /* Bo tròn góc trên của ảnh dự án để khớp với thẻ */
+.project-info { padding: 20px !important; }
+
+/* 6. Đồng bộ khung Form Contact */
+.contact-form, .contact-info {
+    border-radius: 12px !important;
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    padding: 25px !important;
+}
+.contact-form::before { display: none !important; }
+.cyber-input { border-radius: 8px !important; } /* Bo tròn nhẹ các ô nhập liệu */
