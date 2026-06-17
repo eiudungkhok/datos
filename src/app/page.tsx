@@ -480,11 +480,50 @@ export default function DatOS() {
             <div className="section active"><h2 className="section-title glitch-text" data-text="DATABASE_OF_PROJECTS">DATABASE_OF_PROJECTS</h2><div className="project-grid mt-2">{projectsList.map((p) => (<div key={p.id} className="project-card holographic-card"><div className="project-img-wrapper"><img src={p.image_url} alt={p.title} className="cursor-pointer" onClick={() => setSelectedImage(p.image_url)} /></div><div className="project-info"><h3 style={{color: "var(--neon-cyan)"}}>{p.title}</h3><p className="mb-2">{p.description}</p><div style={{ display: "flex", gap: "10px" }}>{p.github && <a href={p.github} target="_blank" className="cyber-btn" style={{padding: "5px 10px", fontSize: "0.8rem"}}><span>[ GITHUB ]</span></a>}{p.demo && p.demo !== '#' && <a href={p.demo} target="_blank" className="cyber-btn secondary" style={{padding: "5px 10px", fontSize: "0.8rem"}}><span>[ DEMO ]</span></a>}</div></div></div>))}</div></div>
           )}
           
-          {/* MEDIA VAULT SECTION */}
+{/* MEDIA VAULT SECTION */}
           {activeSection === "media" && (
-            <div className="section active"><h2 className="section-title glitch-text" data-text="SECURE_MEDIA_VAULT">SECURE_MEDIA_VAULT</h2><div className="media-grid mt-2">{galleryList.map((item) => (<div key={item.id} className="media-item"><img src={item.image_url} alt={item.title} className="cursor-pointer" onClick={() => setSelectedImage(item.image_url)} /><div className="media-overlay"><h4 style={{marginBottom: "5px"}}>{item.title}</h4><p style={{fontSize: "0.8rem", color: "#ccc"}}>{item.description}</p><span className="badge mt-2" style={{fontSize: "0.7rem"}}>{item.category}</span></div></div>))}</div></div>
-          )}
-          
+            <div className="section active">
+              <h2 className="section-title glitch-text" data-text="SECURE_MEDIA_VAULT">SECURE_MEDIA_VAULT</h2>
+              
+              {/* THUẬT TOÁN GOM NHÓM ẢNH THÀNH TỪNG ALBUM TỰ ĐỘNG */}
+              {Object.entries(
+                galleryList.reduce((acc, curr) => {
+                  // Sử dụng cột 'category' trong Database làm Tên Album
+                  const folder = curr.category || "UNCLASSIFIED_DATA";
+                  if (!acc[folder]) acc[folder] = [];
+                  acc[folder].push(curr);
+                  return acc;
+                }, {})
+              ).map(([folderName, photos]: [string, any]) => (
+                <div key={folderName} className="media-folder" style={{ marginTop: "30px" }}>
+                  
+                  {/* Tên Album / Thư mục */}
+                  <h3 className="neon-text mb-2" style={{ fontSize: "1.4rem", borderBottom: "1px dashed var(--glass-border)", paddingBottom: "10px", textTransform: "uppercase" }}>
+                    <i className="fas fa-folder-open" style={{ marginRight: "10px" }}></i> {folderName}
+                    <span style={{ fontSize: "0.9rem", color: "#888", marginLeft: "10px" }}>[{photos.length} files]</span>
+                  </h3>
+                  
+                  {/* Lưới chứa tất cả các ảnh thuộc Album đó */}
+                  <div className="media-grid mt-2">
+                    {photos.map((item: any) => (
+                      <div key={item.id} className="media-item">
+                        <img 
+                          src={item.image_url} 
+                          alt={item.title} 
+                          className="cursor-pointer" 
+                          onClick={() => setSelectedImage(item.image_url)} 
+                        />
+                        <div className="media-overlay">
+                          <h4 style={{marginBottom: "5px"}}>{item.title}</h4>
+                          <p style={{fontSize: "0.8rem", color: "#ccc"}}>{item.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}          
 {/* BLOG SECTION */}
           {activeSection === "blog" && (
             <div className="section active">
