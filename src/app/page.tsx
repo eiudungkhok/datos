@@ -264,22 +264,39 @@ export default function DatOS() {
     <>
       <Head><title>DatOS | {profile.full_name}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></Head>
       <canvas ref={canvasRef} id="matrix-canvas"></canvas><div className="crt-overlay"></div>
-      <header className="os-topbar glass-panel flex items-center justify-between">
-        <div className="topbar-left">
-          <span className="os-logo glitch-hover" data-text="[DatOS v1.0]">[DatOS v1.0]</span><span className="breadcrumb">C:\Home\{">"} <span id="current-path">{activeSection.toUpperCase()}</span></span>
+<header className="os-topbar glass-panel flex items-center justify-between">
+        <div className="topbar-left flex items-center">
+          <span className="os-logo glitch-hover font-bold" data-text="[DatOS v1.0]">[DatOS v1.0]</span>
+          {/* Breadcrumb đã được ẩn bằng CSS trên mobile từ trước */}
+          <span className="breadcrumb ml-2">C:\Home\{">"} <span id="current-path">{activeSection.toUpperCase()}</span></span>
         </div>
-        <div className="topbar-right">
+        
+        {/* Phép thuật nằm ở đây: Dùng flex và gap-3 để hệ thống tự chia khoảng cách đều tăm tắp */}
+        <div className="topbar-right flex items-center gap-3 sm:gap-4">
           {audioSrc && <audio ref={audioRef} src={audioSrc} onEnded={() => setIsPlaying(false)} loop />}
-          <span id="music-player" className="cursor-pointer" onClick={togglePlay}>
-            <i className={`fas ${isPlaying ? 'fa-pause-circle' : 'fa-music'}`}></i> <span className="track-name" style={{marginLeft: "5px"}}>{trackName}</span>
+          
+          <span id="music-player" className="cursor-pointer flex items-center" onClick={togglePlay}>
+            <i className={`fas ${isPlaying ? 'fa-pause-circle' : 'fa-music'}`}></i> 
+            {/* Ẩn tên bài hát MP3 trên điện thoại (hidden), chỉ bung ra trên màn hình lớn (md:inline) */}
+            <span className="track-name hidden md:inline ml-2">{trackName}</span>
           </span>
-          <span id="weather-widget" style={{marginLeft: "15px"}}><i className="fas fa-cloud-sun"></i> {temp}</span>
-          <span id="clock-widget" style={{marginLeft: "15px"}}>{currentTime}</span>
-          <button onClick={() => setLang(lang === "EN" ? "VN" : "EN")} className="btn-icon" style={{marginLeft: "15px", fontWeight: "bold", fontSize: "0.85rem"}}>{lang === "EN" ? "VN" : "EN"}</button>
-          <button onClick={toggleTheme} className="btn-icon" style={{marginLeft: "10px"}}><i className={`fas ${theme === "dark" ? 'fa-sun' : 'fa-moon'}`}></i></button>
+          
+          <span id="weather-widget" className="flex items-center gap-1">
+            <i className="fas fa-cloud-sun"></i> {temp}
+          </span>
+          
+          <span id="clock-widget">{currentTime}</span>
+          
+          {/* Ép margin = 0 để vô hiệu hóa margin-left cứng trong file CSS cũ */}
+          <button onClick={() => setLang(lang === "EN" ? "VN" : "EN")} className="btn-icon font-bold" style={{ margin: 0, fontSize: "0.85rem" }}>
+            {lang === "EN" ? "VN" : "EN"}
+          </button>
+          
+          <button onClick={toggleTheme} className="btn-icon" style={{ margin: 0 }}>
+            <i className={`fas ${theme === "dark" ? 'fa-sun' : 'fa-moon'}`}></i>
+          </button>
         </div>
       </header>
-
       <main className="app-container">
         <nav className="sidebar glass-panel">
 <div className="user-profile">
