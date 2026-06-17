@@ -265,33 +265,36 @@ export default function DatOS() {
       <Head><title>DatOS | {profile.full_name}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></Head>
       <canvas ref={canvasRef} id="matrix-canvas"></canvas><div className="crt-overlay"></div>
 <header className="os-topbar glass-panel flex items-center justify-between">
-        <div className="topbar-left flex items-center">
-          <span className="os-logo glitch-hover font-bold" data-text="[DatOS v1.0]">[DatOS v1.0]</span>
-          {/* Breadcrumb đã được ẩn bằng CSS trên mobile từ trước */}
-          <span className="breadcrumb ml-2">C:\Home\{">"} <span id="current-path">{activeSection.toUpperCase()}</span></span>
+        {/* Góc trái: Logo */}
+        <div className="topbar-left" style={{ display: 'flex', alignItems: 'center' }}>
+          <span className="os-logo glitch-hover" style={{ fontWeight: 'bold' }} data-text="[DatOS v1.0]">[DatOS v1.0]</span>
+          <span className="breadcrumb" style={{ marginLeft: '10px' }}>C:\Home\{">"} <span id="current-path">{activeSection.toUpperCase()}</span></span>
         </div>
         
-        {/* Phép thuật nằm ở đây: Dùng flex và gap-3 để hệ thống tự chia khoảng cách đều tăm tắp */}
-        <div className="topbar-right flex items-center gap-3 sm:gap-4">
+        {/* Góc phải: Phép thuật gap: '12px' ép cứng khoảng cách giữa các phần tử */}
+        <div className="topbar-right" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {audioSrc && <audio ref={audioRef} src={audioSrc} onEnded={() => setIsPlaying(false)} loop />}
           
-          <span id="music-player" className="cursor-pointer flex items-center" onClick={togglePlay}>
+          {/* Nhạc */}
+          <span id="music-player" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={togglePlay}>
             <i className={`fas ${isPlaying ? 'fa-pause-circle' : 'fa-music'}`}></i> 
-            {/* Ẩn tên bài hát MP3 trên điện thoại (hidden), chỉ bung ra trên màn hình lớn (md:inline) */}
-            <span className="track-name hidden md:inline ml-2">{trackName}</span>
+            <span className="track-name hidden md:inline" style={{ marginLeft: '6px' }}>{trackName}</span>
           </span>
           
-          <span id="weather-widget" className="flex items-center gap-1">
-            <i className="fas fa-cloud-sun"></i> {temp}
+          {/* Thời tiết */}
+          <span id="weather-widget" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <i className="fas fa-cloud-sun"></i> <span>{temp}</span>
           </span>
           
+          {/* Đồng hồ */}
           <span id="clock-widget">{currentTime}</span>
           
-          {/* Ép margin = 0 để vô hiệu hóa margin-left cứng trong file CSS cũ */}
-          <button onClick={() => setLang(lang === "EN" ? "VN" : "EN")} className="btn-icon font-bold" style={{ margin: 0, fontSize: "0.85rem" }}>
+          {/* Nút Đổi Ngôn Ngữ */}
+          <button onClick={() => setLang(lang === "EN" ? "VN" : "EN")} className="btn-icon" style={{ margin: 0, fontWeight: 'bold', fontSize: "0.85rem" }}>
             {lang === "EN" ? "VN" : "EN"}
           </button>
           
+          {/* Nút Sáng/Tối */}
           <button onClick={toggleTheme} className="btn-icon" style={{ margin: 0 }}>
             <i className={`fas ${theme === "dark" ? 'fa-sun' : 'fa-moon'}`}></i>
           </button>
