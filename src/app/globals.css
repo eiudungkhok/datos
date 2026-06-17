@@ -391,56 +391,77 @@ body {
 .timeline-content p { color: #ccc; line-height: 1.6; }
 
 /* =========================================
-   🌞 LIGHT MODE THEME
+   🌞 LIGHT MODE THEME (TỐI ƯU ĐỘ TƯƠNG PHẢN ĐỌC CHỮ)
    ========================================= */
 body.light-mode {
     --bg-dark: #f4f4f9;
-    --neon-cyan: #0066cc;
+    --neon-cyan: #0066cc; /* Xanh dương đậm đầm mắt */
     --neon-pink: #d10074;
     --neon-green: #008000;
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(0, 0, 0, 0.1);
-    color: #333;
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(0, 0, 0, 0.15);
+    color: #111111; /* Ép chữ body thành màu đen đậm */
 }
+
 body.light-mode .cyber-input {
     background: rgba(255, 255, 255, 0.9);
     color: #111;
     border: 1px solid #ccc;
 }
+
 body.light-mode .holographic-card {
-    background: linear-gradient(135deg, rgba(0,102,204,0.05), rgba(209,0,116,0.05));
-    border-color: #ccc;
+    background: linear-gradient(135deg, rgba(0,102,204,0.02), rgba(209,0,116,0.02));
+    border-color: rgba(0, 0, 0, 0.15);
 }
+
+/* Biến đổi Terminal thành bảng điện tử trắng đen tinh tế */
 body.light-mode .terminal-window {
-    background: #fff;
-    border-color: #ccc;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    background: #ffffff;
+    border-color: #cccccc;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
+
 body.light-mode .terminal-header {
-    background: #e0e0e0;
+    background: #e5e7eb;
+    border-bottom: 1px solid #cccccc;
 }
+
+body.light-mode .terminal-body,
+body.light-mode #terminal-input {
+    color: #222222 !important; /* Chuyển chữ terminal xanh neon thành đen xám cực dễ đọc */
+}
+
+body.light-mode .prompt {
+    color: #0066cc !important;
+}
+
 body.light-mode .project-card img, body.light-mode .media-item img {
     filter: none;
 }
-/* --- Dọn rác giao diện Light Mode --- */
+
 body.light-mode .crt-overlay {
-    display: none; /* Tắt hẳn đường kẻ sọc nhiễu sóng */
+    display: none; /* Tắt hẳn đường kẻ sọc nhiễu sóng gây nhức mắt trên nền sáng */
 }
+
 body.light-mode #matrix-canvas {
-    opacity: 0.03; /* Làm mờ tịt hiệu ứng chữ rớt xuống, hoặc để display: none luôn cũng được */
+    opacity: 0.02; /* Làm mờ tịt ma trận để không làm rối nền chữ */
 }
+
 body.light-mode .os-topbar {
     background: rgba(255, 255, 255, 0.9);
-    color: #111;
-    border-bottom: 1px solid #ddd;
+    color: #111111;
+    border-bottom: 1px solid #dddddd;
 }
+
 body.light-mode .sidebar {
     background: #f4f4f9;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #dddddd;
 }
+
 body.light-mode .nav-links li a {
-    color: #555;
+    color: #444444;
 }
+
 body.light-mode .nav-links li a:hover, 
 body.light-mode .nav-links li a.active {
     background: rgba(0, 102, 204, 0.1);
@@ -448,11 +469,61 @@ body.light-mode .nav-links li a.active {
     color: var(--neon-cyan);
     text-shadow: none;
 }
+
 body.light-mode .btn-icon {
-    color: #333; /* Đổi màu nút trên thanh topbar thành đen */
+    color: #333333; 
 }
+
 body.light-mode .glitch-text {
-    text-shadow: none; /* Tắt bớt nhòe chữ */
+    text-shadow: none; /* Tắt bóng nhòe chữ gây lóa mắt */
+    color: #111111 !important;
+}
+
+/* ========================================================
+   BỘ ĐÈ MÀU (OVERRIDE): TRỊ TẬN GỐC CÁC CHỮ BỊ "CHÌM" VÀO NỀN TRẮNG
+   ======================================================== */
+body.light-mode .user-name {
+    color: #111111 !important;
+    text-shadow: none !important;
+}
+
+body.light-mode .user-role {
+    color: #666666 !important;
+}
+
+body.light-mode .cert-card h3,
+body.light-mode .game-header h3,
+body.light-mode .timeline-content h3,
+body.light-mode .project-info h3 {
+    color: #111111 !important;
+}
+
+body.light-mode .cert-card p,
+body.light-mode .game-stats p,
+body.light-mode .project-info p,
+body.light-mode .timeline-content p,
+body.light-mode .blog-post p {
+    color: #444444 !important; /* Đổi toàn bộ chữ xám nhạt/trắng thành màu xám than đậm gắt tương phản cao */
+}
+
+body.light-mode .game-stats p {
+    border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode .game-header div {
+    background: rgba(0, 0, 0, 0.03) !important;
+}
+
+body.light-mode .cyber-link {
+    color: #444444 !important;
+}
+
+body.light-mode .cyber-link:hover {
+    color: var(--neon-cyan) !important;
+}
+
+body.light-mode .game-stats p strong {
+    color: var(--neon-cyan) !important;
 }
 /* =========================================
    FIX ẢNH QR DONATE BỊ TRÀN
