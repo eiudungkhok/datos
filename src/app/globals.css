@@ -965,3 +965,52 @@ body.light-mode .game-stats p strong {
     scrollbar-width: thin;
     scrollbar-color: var(--neon-cyan) var(--bg-dark);
 }
+
+/* =========================================
+   ÉP KHUÔN HÌNH ẢNH (MEDIA VAULT & PROJECTS) TỐI ƯU HIỂN THỊ
+   ========================================= */
+
+/* 1. Dàn trận lưới cho Media Vault (Tự động chia cột tùy theo màn hình) */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+/* 2. Ép ảnh Media gọn gàng vào trong thẻ */
+.media-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.media-item img {
+    width: 100% !important;
+    height: 220px !important; /* Cố định chiều cao thẻ ảnh (Ông có thể tăng/giảm số này) */
+    object-fit: cover !important; /* Phép thuật ở đây: Tự động zoom và cắt phần rìa để ảnh vừa khít khung mà KHÔNG BỊ MÉO */
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* Hiệu ứng nảy hình cực mượt khi rê chuột vào */
+.media-item:hover img {
+    transform: scale(1.05);
+}
+
+/* 3. Đồng bộ luôn ảnh của mục Projects (Dự án) cho nó gọn gàng đều tăm tắp */
+.project-img-wrapper img {
+    width: 100% !important;
+    height: 200px !important;
+    object-fit: cover !important;
+}
+
+/* Tinh chỉnh lại chữ nằm đè lên ảnh Media cho dễ đọc */
+.media-overlay {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9)); /* Đổ bóng đen từ dưới lên */
+    padding: 20px 15px 15px;
+    pointer-events: none; /* Tránh click nhầm vào chữ thay vì click phóng to ảnh */
+}
+
