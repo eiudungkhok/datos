@@ -485,13 +485,33 @@ export default function DatOS() {
             <div className="section active"><h2 className="section-title glitch-text" data-text="SECURE_MEDIA_VAULT">SECURE_MEDIA_VAULT</h2><div className="media-grid mt-2">{galleryList.map((item) => (<div key={item.id} className="media-item"><img src={item.image_url} alt={item.title} className="cursor-pointer" onClick={() => setSelectedImage(item.image_url)} /><div className="media-overlay"><h4 style={{marginBottom: "5px"}}>{item.title}</h4><p style={{fontSize: "0.8rem", color: "#ccc"}}>{item.description}</p><span className="badge mt-2" style={{fontSize: "0.7rem"}}>{item.category}</span></div></div>))}</div></div>
           )}
           
-          {/* BLOG SECTION */}
+{/* BLOG SECTION */}
           {activeSection === "blog" && (
-            <div className="section active"><h2 className="section-title glitch-text" data-text="PERSONAL_LOGS">PERSONAL_LOGS</h2><div className="blog-list mt-2">{blogsList.map((blog) => (<article key={blog.id} className="blog-post glass-panel" style={{display: "flex", gap: "20px", flexWrap: "wrap"}}>{blog.cover_image && (<img src={blog.cover_image} alt="cover" className="cursor-pointer" style={{width: "150px", height: "150px", objectFit: "cover", border: "1px solid var(--neon-cyan)"}} onClick={() => setSelectedImage(blog.cover_image)} />)}<div style={{flex: 1}}><div className="blog-meta"><span className="date"><i className="fas fa-calendar"></i> {new Date(blog.created_at).toLocaleDateString('vi-VN')}</span></div><h3 className="neon-text">{blog.title}</h3><p>{blog.content}</p></div></article>))}</div></div>
-          )}
-          {activeSection === "terminal" && (
-            <div className="section active"><h2 className="section-title glitch-text" data-text="SYSTEM_TERMINAL">SYSTEM_TERMINAL</h2><div className="terminal-container glass-panel mt-2"><div id="terminal-output">{termHistory.map((item, i) => <div key={i}>{item}</div>)}<div ref={endOfTermRef} /></div><div className="terminal-input-line"><span className="prompt">guest@datos:~$ </span><input type="text" id="terminal-input" autoComplete="off" autoFocus value={termInput} onChange={e => setTermInput(e.target.value)} onKeyDown={handleTerminalSubmit} /></div></div></div>
-          )}
+            <div className="section active">
+              <h2 className="section-title glitch-text" data-text="PERSONAL_LOGS">PERSONAL_LOGS</h2>
+              <div className="blog-list mt-2">
+                {blogsList.map((blog) => (
+                  <article key={blog.id} className="blog-post glass-panel">
+                    {blog.cover_image && (
+                      <img 
+                        src={blog.cover_image} 
+                        alt="cover" 
+                        className="blog-cover-img cursor-pointer" 
+                        onClick={() => setSelectedImage(blog.cover_image)} 
+                      />
+                    )}
+                    <div className="blog-content-wrapper" style={{flex: 1}}>
+                      <div className="blog-meta">
+                        <span className="date"><i className="fas fa-calendar"></i> {new Date(blog.created_at).toLocaleDateString('vi-VN')}</span>
+                      </div>
+                      <h3 className="neon-text">{blog.title}</h3>
+                      <p>{blog.content}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}          
           {/* CONTACT SECTION */}
           {activeSection === "contact" && (
             <div className="section active">

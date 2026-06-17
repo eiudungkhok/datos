@@ -1014,3 +1014,43 @@ body.light-mode .game-stats p strong {
     pointer-events: none; /* Tránh click nhầm vào chữ thay vì click phóng to ảnh */
 }
 
+/* =========================================
+   ÉP KHUÔN ẢNH BÀI VIẾT (BLOG) THÍCH ỨNG MOBLIE
+   ========================================= */
+
+.blog-post {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start; /* Căn mọi thứ lên sát trần */
+}
+
+/* Khuôn ảnh Blog trên màn hình máy tính */
+.blog-cover-img {
+    width: 200px !important;
+    height: 150px !important;
+    object-fit: cover !important; /* Tự động zoom cắt khít khung, không méo */
+    border-radius: 8px;
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    flex-shrink: 0; /* Phép thuật: Cấm chữ ép bẹp ảnh! */
+    transition: transform 0.3s ease;
+}
+
+.blog-cover-img:hover {
+    transform: scale(1.05); /* Rê chuột vào ảnh tự nảy lên xíu */
+    box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+/* Khi xuống màn hình điện thoại (Tự động biến hình) */
+@media screen and (max-width: 768px) {
+    .blog-post {
+        flex-direction: column; /* Đổi sang xếp dọc */
+        padding: 20px !important;
+    }
+    
+    .blog-cover-img {
+        width: 100% !important; /* Bung ảnh rộng tràn viền thẻ */
+        height: 220px !important; /* Tăng chiều cao lên cho dễ nhìn */
+    }
+}
+
