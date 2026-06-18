@@ -562,6 +562,7 @@ export default function DatOS() {
                     <li><a href="https://www.facebook.com/eiudungkhok" target="_blank" className="cyber-link"><i className="fab fa-facebook"></i> Facebook</a></li>
                     <li><a href="https://github.com/eiudungkhok" target="_blank" className="cyber-link"><i className="fab fa-github"></i> GitHub</a></li>
                     <li><a href="https://www.instagram.com/eiudungkhok" target="_blank" className="cyber-link"><i className="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="https://www.tiktok.com/@eiudungkhok" target="_blank" className="cyber-link"><i className="fab fa-tiktok"></i> TikTok</a></li>
                   </ul>
                 </div>
                 <form className="contact-form holographic-card" onSubmit={handleSendMessage}>
